@@ -1,6 +1,8 @@
 import React from "react";
 import { Layout } from "./Layout";
+import { useNavigate } from "react-router-dom";
 export const OTPSECTION = () => {
+  const navigate = useNavigate();
   return (
     <Layout>
       <div className="flex justify-center items-center py-12">
@@ -18,7 +20,7 @@ export const OTPSECTION = () => {
             <button
               className="bg-[#1d86ff] w-40 text-white rounded-sm "
               onClick={() => {
-                // alert("hi");
+                navigate("/dashboard");
               }}
             >
               Confirm

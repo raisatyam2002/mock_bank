@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginController = loginController;
 const Users_1 = __importDefault(require("../models/Users"));
+const emailservice_1 = require("../utils/emailservice");
 function loginController(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { phoneNumber } = req.body;
@@ -22,10 +23,21 @@ function loginController(req, res) {
                 const user = yield Users_1.default.findOne({
                     phoneNumber: phoneNumber,
                 });
-                console.log(user);
                 if (user) {
+                    const otp = Math.floor(Math.random() * 1000000);
+                    const newUser = yield Users_1.default.updateOne({
+                        where: {
+                            phoneNumber: phoneNumber,
+                        },
+                        otp: otp,
+                    });
+                    console.log(newUser);
+                    yield (0, emailservice_1.sendEmail)("raisatyam121@gmail.com", String(otp));
                     return res.status(200).send({
-                        user,
+                        user: {
+                            name: user.name,
+                            address: user.address,
+                        },
                         success: true,
                     });
                 }

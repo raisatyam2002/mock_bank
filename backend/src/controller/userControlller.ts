@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import userModel from "../models/Users";
+import { sendEmail } from "../utils/emailservice";
 export async function loginController(req: Request, res: Response) {
   const { phoneNumber } = req.body;
   try {
@@ -7,10 +8,22 @@ export async function loginController(req: Request, res: Response) {
       const user = await userModel.findOne({
         phoneNumber: phoneNumber,
       });
-      console.log(user);
+
       if (user) {
+        const otp = Math.floor(Math.random() * 1000000);
+        const newUser = await userModel.updateOne({
+          where: {
+            phoneNumber: phoneNumber,
+          },
+          otp: otp,
+        });
+        console.log(newUser);
+        await sendEmail("raisatyam121@gmail.com", String(otp));
         return res.status(200).send({
-          user,
+          user: {
+            name: user.name,
+            address: user.address,
+          },
           success: true,
         });
       } else {

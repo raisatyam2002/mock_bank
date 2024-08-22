@@ -22,6 +22,9 @@ const usersSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
     },
+    otp: {
+        type: String,
+    },
 }, { timestamps: true });
 const users = mongoose_1.default.model("users", usersSchema);
 exports.default = users;
