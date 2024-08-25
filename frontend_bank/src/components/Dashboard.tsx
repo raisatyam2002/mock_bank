@@ -1,8 +1,6 @@
-import React from "react";
 import { Layout } from "./Layout";
-import { useNavigate } from "react-router-dom";
+
 export const Dashboard = () => {
-  const navigate = useNavigate();
   return (
     <Layout>
       <div className="flex justify-center items-center py-12">
@@ -16,9 +14,7 @@ export const Dashboard = () => {
           <div className="flex justify-center mt-4 h-8">
             <button
               className="bg-[#1d86ff] w-40 text-white rounded-sm "
-              onClick={() => {
-                navigate("/paymentConfirmation");
-              }}
+              onClick={() => {}}
             >
               Confirm
             </button>

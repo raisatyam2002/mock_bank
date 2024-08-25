@@ -1,8 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import { Layout } from "./Layout";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
 export const OTPSECTION = () => {
   const navigate = useNavigate();
+  const [otp, setOtp] = useState("");
+  const handleClick = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:8000/user/otpVerification",
+
+        {
+          otp: otp,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      if (res.data.success) {
+        alert(res.data.message);
+        navigate("/dashboard");
+      } else {
+        if (res.data.message == "wrong otp") {
+          alert(res.data.message);
+        } else {
+          navigate("/");
+        }
+      }
+    } catch (error) {
+      alert("error while verifying user enter otp again");
+      navigate("/");
+    } finally {
+      setOtp("");
+    }
+  };
   return (
     <Layout>
       <div className="flex justify-center items-center py-12">
@@ -14,13 +46,17 @@ export const OTPSECTION = () => {
             <input
               className="border-2 p-2 rounded"
               placeholder="Enter 6 digit otp"
+              value={otp}
+              onChange={(e) => {
+                setOtp(e.target.value);
+              }}
             ></input>
           </div>
           <div className="flex justify-center mt-4 h-8">
             <button
               className="bg-[#1d86ff] w-40 text-white rounded-sm "
-              onClick={() => {
-                navigate("/dashboard");
+              onClick={async () => {
+                await handleClick();
               }}
             >
               Confirm

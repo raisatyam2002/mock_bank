@@ -18,11 +18,26 @@ const usersSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    otp: {
-      type: String,
-    },
   },
   { timestamps: true }
 );
+const otpSchema = new mongoose.Schema({
+  otp: {
+    type: String,
+    required: true,
+  },
+  phoneNumber: {
+    type: Number,
+    required: true,
+    ref: "users",
+    unique: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    expires: "3m",
+  },
+});
 const users = mongoose.model("users", usersSchema);
+export const otpModel = mongoose.model("otp", otpSchema);
 export default users;

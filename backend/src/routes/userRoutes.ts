@@ -1,6 +1,10 @@
 import { Router } from "express";
 import userModel from "../models/Users";
-import { loginController } from "../controller/userControlller";
+import {
+  loginController,
+  otpVerificationController,
+} from "../controller/userControlller";
+import { attachCookie, validateCookie } from "../middleware/auth";
 const router = Router();
 
 router.get("/", (req, res) => {
@@ -8,5 +12,6 @@ router.get("/", (req, res) => {
     message: "hi from user routes",
   });
 });
-router.post("/login", loginController);
+router.post("/login", attachCookie, loginController);
+router.post("/otpVerification", validateCookie, otpVerificationController);
 export default router;

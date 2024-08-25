@@ -11,8 +11,8 @@ export const Home = () => {
         phoneNumber: customerId,
       });
       if (res.data.success) {
-        console.log(res.data.user);
-        navigate("/dashboard");
+        console.log(res.data.message);
+        navigate("/paymentConfirmation");
       } else {
         alert(res.data.message);
       }
@@ -46,7 +46,6 @@ export const Home = () => {
               className="bg-[#1d86ff] w-40 text-white rounded-sm "
               onClick={async () => {
                 await handleClick();
-                navigate("/paymentConfirmation");
               }}
             >
               Login
