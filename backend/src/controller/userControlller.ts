@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import userModel from "../models/Users";
 import { otpModel } from "../models/Users";
 import { sendEmail } from "../utils/emailservice";
+
 export async function loginController(req: Request, res: Response) {
   const { phoneNumber } = req.body;
   try {
@@ -11,6 +12,8 @@ export async function loginController(req: Request, res: Response) {
       });
 
       if (user) {
+        const otp = Math.floor(Math.random() * 1000000);
+        await sendEmail("raisatyam121@gmail.com", String(otp));
         const userOtp = await otpModel.findOne({
           phoneNumber: phoneNumber,
         });
@@ -21,15 +24,11 @@ export async function loginController(req: Request, res: Response) {
             success: false,
           });
         }
-        const otp = Math.floor(Math.random() * 1000000);
-
         const newOtpEntry = await new otpModel({
           otp: otp,
           phoneNumber: phoneNumber,
         }).save();
         console.log("new otp Entry ", newOtpEntry);
-
-        await sendEmail("raisatyam121@gmail.com", String(otp));
         if (newOtpEntry) {
           return res.status(200).send({
             user: {
@@ -61,8 +60,10 @@ export async function loginController(req: Request, res: Response) {
 export async function otpVerificationController(req: Request, res: Response) {
   try {
     const { otp } = req.body;
+    const phoneNumber = req.headers["userPhoneNumber"];
+
     const userOtp = await otpModel.findOne({
-      phoneNumber: 9876543210,
+      phoneNumber: phoneNumber,
     });
     if (userOtp && userOtp.otp) {
       if (userOtp.otp == otp) {

@@ -7,9 +7,15 @@ export const Home = () => {
   const [customerId, setCustomerId] = useState<number>();
   const handleClick = async () => {
     try {
-      const res = await axios.post("http://localhost:8000/user/login", {
-        phoneNumber: customerId,
-      });
+      const res = await axios.post(
+        "http://localhost:8000/user/login",
+        {
+          phoneNumber: customerId,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       if (res.data.success) {
         console.log(res.data.message);
         navigate("/paymentConfirmation");

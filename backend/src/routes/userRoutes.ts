@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import userModel from "../models/Users";
 import {
   loginController,
@@ -14,4 +14,10 @@ router.get("/", (req, res) => {
 });
 router.post("/login", attachCookie, loginController);
 router.post("/otpVerification", validateCookie, otpVerificationController);
+router.get("/checkCookie", validateCookie, (req: Request, res: Response) => {
+  res.status(200).send({
+    success: true,
+    message: "validated",
+  });
+});
 export default router;

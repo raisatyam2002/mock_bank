@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import JWT from "jsonwebtoken";
 
 export async function attachCookie(
   req: Request,
@@ -8,13 +8,10 @@ export async function attachCookie(
 ) {
   try {
     const { phoneNumber } = req.body;
-    const token = await jwt.sign(phoneNumber, "secretKey");
+    const token = await JWT.sign(phoneNumber, "secretKey");
     console.log("token ", token);
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "none",
-    });
+
+    res.cookie("token", token);
     console.log("Set-Cookie Header:", res.getHeaders()["set-cookie"]);
     next();
   } catch {
@@ -35,7 +32,18 @@ export async function validateCookie(
 
     console.log(token);
     console.log("check token ", token);
-    next();
+    const decode = await JWT.verify(token, "secretKey");
+    console.log("check cookie ", decode);
+
+    if (typeof decode == "string") {
+      req.headers["userPhoneNumber"] = decode;
+      next();
+    } else {
+      return res.status(200).send({
+        success: false,
+        message: "check your login Id",
+      });
+    }
   } catch (error) {
     return res.send({
       success: false,
