@@ -1,8 +1,31 @@
 import React, { useState } from "react";
 import { Layout } from "./Layout";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
+import sjcl from "sjcl";
 export const Home = () => {
+  const [URLSearchParams, SetURLSearchParams] = useSearchParams();
+  console.log("PARAMS", URLSearchParams.get("token"));
+  const token = URLSearchParams.get("token");
+  const decryptedDataString = decodeURIComponent(token || "");
+  console.log("decrypt string ", decryptedDataString);
+  const encryptedData2 = JSON.parse(token || "");
+  console.log("encyptd data2 ", encryptedData2);
+
+  // Proceed with decryption using sjcl or your preferred method
+  // const decryptedData = sjcl.decrypt(
+  //   "your-encryption-password",
+  //   JSON.stringify(encryptedData2)
+  // );
+  try {
+    const decryptedData = sjcl.decrypt(
+      "your-encryption-password",
+      JSON.stringify(encryptedData2)
+    );
+    console.log("decrypted data", decryptedData);
+  } catch (error: any) {
+    console.error("Decryption failed:", error.message);
+  }
   const navigate = useNavigate();
   const [customerId, setCustomerId] = useState<number>();
   const handleClick = async () => {
@@ -18,7 +41,7 @@ export const Home = () => {
       );
       if (res.data.success) {
         console.log(res.data.message);
-        navigate("/paymentConfirmation");
+        navigate(`/paymentConfirmation/?token=${urlSafeEncryptedData}`);
       } else {
         alert(res.data.message);
       }

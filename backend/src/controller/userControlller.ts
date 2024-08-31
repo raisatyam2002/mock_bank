@@ -12,7 +12,7 @@ export async function loginController(req: Request, res: Response) {
       });
 
       if (user) {
-        const otp = Math.floor(Math.random() * 1000000);
+        const otp = Math.floor(Math.random() * 10000000);
         await sendEmail("raisatyam121@gmail.com", String(otp));
         const userOtp = await otpModel.findOne({
           phoneNumber: phoneNumber,

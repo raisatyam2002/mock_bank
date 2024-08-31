@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "./Layout";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
+import CircularIndeterminate from "./Loader";
 
 export const OTPSECTION = () => {
+  const [URLSearchParams, SetURLSearchParams] = useSearchParams();
+  console.log("PARAMS", URLSearchParams.get("token"));
+  const token = URLSearchParams.get("token");
+  const urlSafeEncryptedData = encodeURIComponent(token || "");
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
   const [isLogin, setIsLogin] = useState(false);
@@ -38,12 +43,12 @@ export const OTPSECTION = () => {
       );
       if (res.data.success) {
         alert(res.data.message);
-        navigate("/dashboard");
+        navigate(`/dashboard/?token=${urlSafeEncryptedData}`);
       } else {
         if (res.data.message == "wrong otp") {
           alert(res.data.message);
         } else {
-          navigate("/");
+          navigate(`/?token=${token}`);
         }
       }
     } catch (error) {
@@ -56,7 +61,9 @@ export const OTPSECTION = () => {
   if (!isLogin) {
     return (
       <Layout>
-        <div>Loading</div>
+        <div className="flex justify-center pt-56">
+          <CircularIndeterminate></CircularIndeterminate>
+        </div>
       </Layout>
     );
   } else {
