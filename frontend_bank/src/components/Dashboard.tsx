@@ -4,34 +4,11 @@ import axios from "axios";
 import CircularIndeterminate from "./Loader";
 import { useSearchParams } from "react-router-dom";
 import sjcl from "sjcl";
+import { useRecoilState } from "recoil";
+import { userDetails } from "../store/userDetails";
 export const Dashboard = () => {
   const [isLogin, setIsLogin] = useState(false);
-  const [URLSearchParams, SetURLSearchParams] = useSearchParams();
-  console.log("PARAMS", URLSearchParams.get("token"));
-  const token = URLSearchParams.get("token");
-
-  const decryptedDataString = decodeURIComponent(token || "").trim();
-  console.log("decrypt string ", decryptedDataString);
-  const encryptedData2 = JSON.parse(token || "");
-  console.log("encyptd data2 ", encryptedData2);
-
-  // Proceed with decryption using sjcl or your preferred method
-  // const decryptedData = sjcl.decrypt(
-  //   "your-encryption-password",
-  //   JSON.stringify(encryptedData2)
-  // );
-  try {
-    const decryptedData = sjcl.decrypt(
-      "your-encryption-password",
-      JSON.stringify(encryptedData2)
-    );
-    console.log("decrypted data", decryptedData);
-  } catch (error: any) {
-    console.error("Decryption failed:", error.message);
-  }
-  // console.log("decrypted data", decryptedData);
-
-  // alert(token);
+  const [getUserDetails, setUserDetails] = useRecoilState(userDetails);
   useEffect(() => {
     const checkAuthorization = async () => {
       const res = await axios.get("http://localhost:8000/user/checkCookie", {
@@ -57,18 +34,42 @@ export const Dashboard = () => {
   } else {
     return (
       <Layout>
+        {getUserDetails.amount}
         <div className="flex justify-center items-center py-12">
           <div className="loginForm bg-white p-8 border rounded shadow-lg w-full max-w-md">
             <div className="text-lg font-semibold mb-4">
               Send Money to Payment App
             </div>
             <div className="flex flex-col gap-4">
-              <input className="border-2 p-2 rounded" value={"200"}></input>
+              <input
+                className="border-2 p-2 rounded"
+                value={getUserDetails.amount}
+              ></input>
             </div>
             <div className="flex justify-center mt-4 h-8">
               <button
                 className="bg-[#1d86ff] w-40 text-white rounded-sm "
-                onClick={() => {}}
+                onClick={async () => {
+                  try {
+                    const res = await axios.post(
+                      "http://localhost:8000/user/sendUserDetails",
+                      {
+                        data: {
+                          user_identifier: getUserDetails.user_identifier,
+                          amount: getUserDetails.amount,
+                          token: getUserDetails.token,
+                        },
+                      },
+                      {
+                        withCredentials: true,
+                      }
+                    );
+                    console.log(res.data.message);
+                  } catch (error) {
+                    console.log(error);
+                    alert("error while sedingmoney");
+                  }
+                }}
               >
                 Confirm
               </button>

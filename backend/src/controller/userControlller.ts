@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import userModel from "../models/Users";
 import { otpModel } from "../models/Users";
 import { sendEmail } from "../utils/emailservice";
+import axios from "axios";
 
 export async function loginController(req: Request, res: Response) {
   const { phoneNumber } = req.body;
@@ -87,6 +88,43 @@ export async function otpVerificationController(req: Request, res: Response) {
       });
     }
   } catch (error) {
+    return res.status(500).send({
+      success: false,
+      message: "server error",
+    });
+  }
+}
+export async function sendUserDetailsController(req: Request, res: Response) {
+  try {
+    const data = req.body;
+    console.log(data);
+    const result = await axios.post(
+      "http://localhost:3002/hdfcWebhook",
+      {
+        token: data.token,
+        user_identifier: data.user_identifier,
+        amount: data.amount,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (result.data.success) {
+      return res.status(201).send({
+        message: "Money sent succesfully",
+        success: true,
+      });
+    } else {
+      return res.status(201).send({
+        success: false,
+        message: " error while sending money try again after sometime",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+
     return res.status(500).send({
       success: false,
       message: "server error",

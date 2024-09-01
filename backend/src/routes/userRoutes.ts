@@ -3,6 +3,7 @@ import userModel from "../models/Users";
 import {
   loginController,
   otpVerificationController,
+  sendUserDetailsController,
 } from "../controller/userControlller";
 import { attachCookie, validateCookie } from "../middleware/auth";
 const router = Router();
@@ -20,4 +21,5 @@ router.get("/checkCookie", validateCookie, (req: Request, res: Response) => {
     message: "validated",
   });
 });
+router.post("/sendUserDetails", validateCookie, sendUserDetailsController);
 export default router;
