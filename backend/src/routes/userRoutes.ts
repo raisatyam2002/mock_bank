@@ -4,6 +4,7 @@ import {
   loginController,
   otpVerificationController,
   sendUserDetailsController,
+  test,
 } from "../controller/userControlller";
 import { attachCookie, validateCookie } from "../middleware/auth";
 const router = Router();
@@ -22,4 +23,5 @@ router.get("/checkCookie", validateCookie, (req: Request, res: Response) => {
   });
 });
 router.post("/sendUserDetails", validateCookie, sendUserDetailsController);
+router.get("/webHook", test);
 export default router;

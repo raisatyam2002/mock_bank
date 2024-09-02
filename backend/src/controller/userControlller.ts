@@ -96,7 +96,7 @@ export async function otpVerificationController(req: Request, res: Response) {
 }
 export async function sendUserDetailsController(req: Request, res: Response) {
   try {
-    const data = req.body;
+    const data = await req.body;
     console.log(data);
     const result = await axios.post(
       "http://localhost:3002/hdfcWebhook",
@@ -111,6 +111,8 @@ export async function sendUserDetailsController(req: Request, res: Response) {
         },
       }
     );
+    console.log("result ", result.data);
+
     if (result.data.success) {
       return res.status(201).send({
         message: "Money sent succesfully",
@@ -123,11 +125,36 @@ export async function sendUserDetailsController(req: Request, res: Response) {
       });
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
 
     return res.status(500).send({
       success: false,
       message: "server error",
     });
+  }
+}
+export async function test(req: Request, res: Response) {
+  try {
+    const result = await axios.post(
+      "http://localhost:3002/hdfcWebhook",
+      {
+        token: "946.1124825382967",
+        user_identifier: "22",
+        amount: 111,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(result);
+
+    return res.send({
+      message: "result " + "check",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.send({ message: "error" });
   }
 }

@@ -8,6 +8,7 @@ import { useRecoilState } from "recoil";
 import { userDetails } from "../store/userDetails";
 export const Dashboard = () => {
   const [isLogin, setIsLogin] = useState(false);
+
   const [getUserDetails, setUserDetails] = useRecoilState(userDetails);
   useEffect(() => {
     const checkAuthorization = async () => {
@@ -23,6 +24,7 @@ export const Dashboard = () => {
     };
     checkAuthorization();
   }, []);
+
   if (!isLogin) {
     return (
       <Layout>
@@ -34,7 +36,6 @@ export const Dashboard = () => {
   } else {
     return (
       <Layout>
-        {getUserDetails.amount}
         <div className="flex justify-center items-center py-12">
           <div className="loginForm bg-white p-8 border rounded shadow-lg w-full max-w-md">
             <div className="text-lg font-semibold mb-4">
@@ -54,21 +55,28 @@ export const Dashboard = () => {
                     const res = await axios.post(
                       "http://localhost:8000/user/sendUserDetails",
                       {
-                        data: {
-                          user_identifier: getUserDetails.user_identifier,
-                          amount: getUserDetails.amount,
-                          token: getUserDetails.token,
-                        },
+                        user_identifier: getUserDetails.user_identifier,
+                        amount: getUserDetails.amount,
+                        token: getUserDetails.token,
                       },
                       {
                         withCredentials: true,
                       }
                     );
-                    console.log(res.data.message);
+                    if (res.data.success) {
+                      alert(res.data.message);
+                    } else {
+                      alert(res.data.message);
+                    }
                   } catch (error) {
                     console.log(error);
-                    alert("error while sedingmoney");
+                    alert("error while sending money");
                   }
+                  setUserDetails({
+                    user_identifier: "",
+                    token: "",
+                    amount: 0,
+                  });
                 }}
               >
                 Confirm
