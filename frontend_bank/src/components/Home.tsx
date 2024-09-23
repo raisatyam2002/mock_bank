@@ -73,7 +73,7 @@ export const Home = () => {
           <div className="text-lg font-semibold mb-4">Login to NetBanking</div>
           <div className="flex flex-col gap-4">
             <div>Customer ID/ User ID</div>
-            {getUserDetails.amount}
+
             <input
               type="number"
               className="border-2 p-2 rounded"
