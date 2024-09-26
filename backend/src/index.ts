@@ -8,11 +8,12 @@ const app = express();
 dotenv.config();
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: (origin, callback) => {
+      callback(null, true);
+    },
     credentials: true,
   })
 );
-
 app.use(cookieParser());
 app.use(express.json());
 connectDb();

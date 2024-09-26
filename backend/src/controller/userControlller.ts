@@ -5,6 +5,8 @@ import { sendEmail } from "../utils/emailservice";
 import axios from "axios";
 
 export async function loginController(req: Request, res: Response) {
+  console.log("control check");
+
   const { phoneNumber } = req.body;
   try {
     if (phoneNumber) {
@@ -52,6 +54,8 @@ export async function loginController(req: Request, res: Response) {
       success: false,
     });
   } catch (error) {
+    console.log("error ", error);
+
     return res.status(400).send({
       error,
       success: false,

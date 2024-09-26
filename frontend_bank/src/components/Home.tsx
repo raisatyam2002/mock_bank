@@ -6,6 +6,7 @@ import sjcl from "sjcl";
 import { userDetails } from "../store/userDetails";
 import { useRecoilState } from "recoil";
 export const Home = () => {
+  // alert(import.meta.env.VITE_SOME_KEY);
   console.log("Home component rendered");
   const [URLSearchParams, SetURLSearchParams] = useSearchParams();
   const token = URLSearchParams.get("token");
@@ -32,8 +33,10 @@ export const Home = () => {
   const [customerId, setCustomerId] = useState<number>();
   const handleClick = async () => {
     try {
+      console.log("ROUTE ", import.meta.env.VITE_BACKENDROUTE);
+
       const res = await axios.post(
-        "http://localhost:8000/user/login",
+        import.meta.env.VITE_BACKENDROUTE + "/user/login",
         {
           phoneNumber: customerId,
         },

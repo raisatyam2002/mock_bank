@@ -12,9 +12,12 @@ export const Dashboard = () => {
   const [getUserDetails, setUserDetails] = useRecoilState(userDetails);
   useEffect(() => {
     const checkAuthorization = async () => {
-      const res = await axios.get("http://localhost:8000/user/checkCookie", {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        import.meta.env.VITE_BACKENDROUTE + "/user/checkCookie",
+        {
+          withCredentials: true,
+        }
+      );
       if (res.data.success) {
         setIsLogin(true);
         console.log("result data ", res.data);
@@ -53,7 +56,8 @@ export const Dashboard = () => {
                 onClick={async () => {
                   try {
                     const res = await axios.post(
-                      "http://localhost:8000/user/sendUserDetails",
+                      import.meta.env.VITE_BACKENDROUTE +
+                        "/user/sendUserDetails",
                       {
                         user_identifier: getUserDetails.user_identifier,
                         amount: getUserDetails.amount,

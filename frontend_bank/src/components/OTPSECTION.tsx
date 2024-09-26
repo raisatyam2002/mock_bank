@@ -14,9 +14,12 @@ export const OTPSECTION = () => {
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
     const checkAuthoriZation = async () => {
-      const res = await axios.get("http://localhost:8000/user/checkCookie", {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        import.meta.env.VITE_BACKENDROUTE + "/user/checkCookie",
+        {
+          withCredentials: true,
+        }
+      );
       if (res.data.success) {
         // alert("hi");
         setIsLogin(true);
@@ -30,7 +33,7 @@ export const OTPSECTION = () => {
   const handleClick = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:8000/user/otpVerification",
+        import.meta.env.VITE_BACKENDROUTE + "/user/otpVerification",
         {
           otp: otp,
         },
