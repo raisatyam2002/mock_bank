@@ -11,7 +11,11 @@ export async function attachCookie(
     const token = await JWT.sign(phoneNumber, "secretKey");
     console.log("token ", token);
 
-    res.cookie("token", token);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "none",
+    });
     console.log("Set-Cookie Header:", res.getHeaders()["set-cookie"]);
     next();
   } catch {
