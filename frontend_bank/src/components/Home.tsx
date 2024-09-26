@@ -32,6 +32,7 @@ export const Home = () => {
   const navigate = useNavigate();
   const [customerId, setCustomerId] = useState<number>();
   const handleClick = async () => {
+    alert("click");
     try {
       console.log("ROUTE ", import.meta.env.VITE_BACKENDROUTE);
 
