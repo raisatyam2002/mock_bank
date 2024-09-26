@@ -14,7 +14,7 @@ export async function attachCookie(
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,
-      sameSite: "none",
+      sameSite: 'none',
     });
     console.log("Set-Cookie Header:", res.getHeaders()["set-cookie"]);
     next();
