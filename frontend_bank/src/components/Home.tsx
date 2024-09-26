@@ -6,31 +6,27 @@ import sjcl from "sjcl";
 import { userDetails } from "../store/userDetails";
 import { useRecoilState } from "recoil";
 export const Home = () => {
+  console.log("Home component rendered");
   const [URLSearchParams, SetURLSearchParams] = useSearchParams();
-  // console.log("PARAMS", URLSearchParams.get("token"));
   const token = URLSearchParams.get("token");
-  const decryptedDataString = decodeURIComponent(token || "");
-  // console.log("decrypt string ", decryptedDataString);
-  const encryptedData2 = JSON.parse(token || "");
-  // console.log("encyptd data2 ", encryptedData2);
-  const [getUserDetails, setUserDetails] = useRecoilState(userDetails);
-
-  // Proceed with decryption using sjcl or your preferred method
-  // const decryptedData = sjcl.decrypt(
-  //   "your-encryption-password",
-  //   JSON.stringify(encryptedData2)
-  var userData: any;
-  // );
+  let encryptedData2;
   try {
-    const decryptedData = sjcl.decrypt(
-      "your-encryption-password",
-      JSON.stringify(encryptedData2)
-    );
-    // console.log("decrypted data", decryptedData);
+    encryptedData2 = JSON.parse(token || "{}");
+  } catch (error) {
+    console.error("Error parsing token:", error);
+    return; // Exit early if parsing fails
+  }
+
+  const [getUserDetails, setUserDetails] = useRecoilState(userDetails);
+  let userData;
+  try {
+    const decryptedData = sjcl.decrypt("your-encryption-password", token || "");
+    console.log("dexctypr data ", decryptedData);
+
     userData = JSON.parse(decryptedData);
-    // console.log("userData ", userData);
   } catch (error: any) {
     console.error("Decryption failed:", error.message);
+    return; // Exit early if decryption fails
   }
   const navigate = useNavigate();
   const [customerId, setCustomerId] = useState<number>();
@@ -59,12 +55,16 @@ export const Home = () => {
     }
   };
   useEffect(() => {
-    setUserDetails({
-      user_identifier: userData.user_identifier,
-      amount: userData.amount,
-      token: userData.token,
-    });
-    console.log("getDetails ", getUserDetails);
+    if (userData) {
+      setUserDetails({
+        user_identifier: userData.user_identifier,
+        amount: userData.amount,
+        token: userData.token,
+      });
+      console.log("getDetails ", getUserDetails);
+    } else {
+      console.log("No user data available to set.");
+    }
   }, []);
   return (
     <Layout>
