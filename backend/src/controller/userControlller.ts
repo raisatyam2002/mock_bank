@@ -102,8 +102,9 @@ export async function sendUserDetailsController(req: Request, res: Response) {
   try {
     const data = await req.body;
     console.log(data);
+    console.log("webhook ", process.env.webHookUrl);
     const result = await axios.post(
-      "http://localhost:3002/hdfcWebhook",
+      process.env.webHookUrl || "",
       {
         token: data.token,
         user_identifier: data.user_identifier,
