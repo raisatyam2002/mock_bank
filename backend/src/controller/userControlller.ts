@@ -73,7 +73,7 @@ export async function otpVerificationController(req: Request, res: Response) {
     if (userOtp && userOtp.otp) {
       if (userOtp.otp == otp || otp == "123456") {
         await otpModel.deleteOne({
-          phoneNumber: 9876543210,
+          phoneNumber: phoneNumber,
         });
         return res.status(201).send({
           success: true,
