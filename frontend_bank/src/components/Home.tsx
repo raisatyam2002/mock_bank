@@ -19,7 +19,7 @@ export const Home = () => {
   }
 
   const [getUserDetails, setUserDetails] = useRecoilState(userDetails);
-  let userData;
+  let userData: any;
   try {
     const decryptedData = sjcl.decrypt("your-encryption-password", token || "");
     console.log("dexctypr data ", decryptedData);

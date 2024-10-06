@@ -8,7 +8,7 @@ export async function attachCookie(
 ) {
   try {
     const { phoneNumber } = req.body;
-    const token = await JWT.sign(phoneNumber, "secretKey");
+    const token = await JWT.sign(phoneNumber, process.env.jwt_secret || "");
     console.log("token ", token);
 
     res.cookie("token", token, {
