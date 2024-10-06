@@ -25,6 +25,7 @@ export async function attachCookie(
     return res.send({
       success: false,
       message: "Error while log in",
+      error: error,
     });
   }
 }
