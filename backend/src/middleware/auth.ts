@@ -8,6 +8,7 @@ export async function attachCookie(
 ) {
   try {
     const { phoneNumber } = req.body;
+
     const token = await JWT.sign(phoneNumber, process.env.jwt_secret || "");
     console.log("token ", token);
 
@@ -18,7 +19,9 @@ export async function attachCookie(
     });
     console.log("Set-Cookie Header:", res.getHeaders()["set-cookie"]);
     next();
-  } catch {
+  } catch (error: any) {
+    console.log("cookie error ", error);
+
     return res.send({
       success: false,
       message: "Error while log in",
