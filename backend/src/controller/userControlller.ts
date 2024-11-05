@@ -119,6 +119,8 @@ export async function sendUserDetailsController(req: Request, res: Response) {
     console.log("result ", result.data);
 
     if (result.data.success) {
+      console.log("debug ", result.data);
+
       return res.status(201).send({
         message: "Money sent succesfully",
         success: true,
@@ -126,7 +128,7 @@ export async function sendUserDetailsController(req: Request, res: Response) {
     } else {
       return res.status(201).send({
         success: false,
-        message: " error while sending money try again after sometime",
+        message: " payment already done",
       });
     }
   } catch (error) {
